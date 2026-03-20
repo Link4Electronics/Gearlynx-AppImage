@@ -4,6 +4,6 @@ Name=Gearlynx
 Comment=Atari Lynx emulator
 Exec=gearlynx
 Icon=icon
-StartupWMClass=
+StartupWMClass=gearlynx
 Categories=Game;Emulator
 Terminal=false
