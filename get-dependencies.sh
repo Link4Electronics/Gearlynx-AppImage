@@ -21,11 +21,18 @@ get-debloated-pkgs --add-common --prefer-nano
 # If the application needs to be manually built that has to be done down here
 echo "Getting app..."
 echo "---------------------------------------------------------------"
-case "$ARCH" in # they use x64 and arm64
+case "$ARCH" in # they use x64 and arm64 for the zip links
 	x86_64)  farch=x64;;
 	aarch64) farch=arm64;;
 esac
+ZIP_LINK=$(wget https://api.github.com/repos/drhelius/Gearlynx/releases -O - \
+      | sed 's/[()",{} ]/\n/g' | grep -o -m 1 "https.*ubuntu24.04-$farch.zip")
+echo "$ZIP_LINK" | awk -F'/' '{gsub(/^v/, "", $(NF-1)); print $(NF-1); exit}' > ~/version
+if ! wget --retry-connrefused --tries=30 "$ZIP_LINK" -O /tmp/app.zip 2>/tmp/download.log; then
+	cat /tmp/download.log
+	exit 1
+fi
 wget https://file${farch}.zip
 
 mkdir -p ./AppDir/bin
-bsdtar -xvf .zip -C ./AppDir/bin
+bsdtar -xvf /tmp/app.zip -C ./AppDir/bin
