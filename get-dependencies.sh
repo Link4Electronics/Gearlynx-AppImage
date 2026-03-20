@@ -32,7 +32,8 @@ if ! wget --retry-connrefused --tries=30 "$ZIP_LINK" -O /tmp/app.zip 2>/tmp/down
 	cat /tmp/download.log
 	exit 1
 fi
-wget https://file${farch}.zip
 
 mkdir -p ./AppDir/bin
 bsdtar -xvf /tmp/app.zip -C ./AppDir/bin
+rm -f ./AppDir/bin/README.txt
+wget -O ./AppDir/bin/gamecontrollerdb.txt https://raw.githubusercontent.com/mdqinc/SDL_GameControllerDB/master/gamecontrollerdb.txt
